@@ -1,6 +1,6 @@
 from rest_framework import generics
-from .models import Category, Products
-from .serializers import CategorySerializer, ProductsSerializer
+from .models import Category, Products, CartItem
+from .serializers import CategorySerializer, ProductsSerializer, CartItemSerializer
 
 
 class CategoryListCreateView(generics.ListCreateAPIView):
@@ -21,3 +21,12 @@ class ProductsListCreateView(generics.ListCreateAPIView):
 class ProductsRetrieveUpdateDestroyView(generics.RetrieveUpdateDestroyAPIView):
     queryset = Products.objects.all()
     serializer_class = ProductsSerializer
+
+
+class CartItemListView(generics.ListCreateAPIView):
+    queryset = CartItem.objects.all()
+    serializer_class = CartItemSerializer
+
+class CartItemDetailView(generics.RetrieveUpdateDestroyAPIView):
+    queryset = CartItem.objects.all()
+    serializer_class = CartItemSerializer
