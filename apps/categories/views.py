@@ -14,10 +14,10 @@ class ProductsListCreateView(generics.ListCreateAPIView):
     serializer_class = ProductsSerializer
 
 
-
 class CartItemListView(generics.ListCreateAPIView):
     queryset = CartItem.objects.all()
     serializer_class = CartItemSerializer
+
 
 class CartItemDetailView(generics.RetrieveUpdateDestroyAPIView):
     queryset = CartItem.objects.all()
