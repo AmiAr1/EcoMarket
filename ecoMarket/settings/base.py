@@ -47,8 +47,7 @@ DOWNLOADED_LIBS = [
 
 MY_APPS = [
     'apps.categories',
-    'apps.products',
-    'apps.cartitem',
+
 ]
 
 INSTALLED_APPS = [

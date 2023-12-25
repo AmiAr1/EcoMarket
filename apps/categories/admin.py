@@ -4,4 +4,5 @@ from apps.categories.models import *
 
 
 admin.site.register(Category)
-# admin.site.register(Products)
+admin.site.register(CartItem)
+admin.site.register(Products)
