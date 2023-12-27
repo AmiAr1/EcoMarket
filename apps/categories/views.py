@@ -28,9 +28,31 @@ class ProductsListView(generics.ListAPIView):
 class ProductsDetailView(generics.RetrieveAPIView):
     queryset = Products.objects.all()
     serializer_class = ProductsSerializer
+    lookup_field = 'id'
+
+    def get(self, request, *args, **kwargs):
+        instance = self.get_object()
+        serializer = self.get_serializer(instance)
+
+        # Получаем ID товара
+        product_id = instance.id
+
+        # Проверяем, добавлен ли товар в корзину (используя куки, например)
+        in_cart = False
+        cart_item_id = request.COOKIES.get(f'cart_item_{product_id}')
+        if cart_item_id:
+            in_cart = CartItem.objects.filter(id=cart_item_id).exists()
+
+        # Добавляем информацию о товаре в корзине
+        cart_info = {
+            'in_cart': in_cart,
+        }
+
+        return Response({"status": "success", "data": serializer.data, "cart_info": cart_info}, status=status.HTTP_200_OK)
 
 
 class CartItemListViews(APIView):
+
     def get(self, request, id=None):
         if id:
             item = get_object_or_404(CartItem, id=id)
@@ -50,7 +72,8 @@ class CartItemListViews(APIView):
             try:
                 product = Products.objects.get(id=product_id)
             except Products.DoesNotExist:
-                return Response({"status": "error", "data": "Product not found"}, status=status.HTTP_404_NOT_FOUND)
+                return Response({"status": "error", "data": "Product not found"},
+                                status=status.HTTP_404_NOT_FOUND)
 
             cart_item, created = CartItem.objects.get_or_create(product_id=product_id)
 
@@ -69,7 +92,6 @@ class CartItemListViews(APIView):
             return Response({"status": "success", "data": "Product added to cart"}, status=status.HTTP_200_OK)
         else:
             return Response({"status": "error", "data": serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
-
 
     def patch(self, request, id=None):
         item = get_object_or_404(CartItem, id=id)

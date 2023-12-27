@@ -1,5 +1,6 @@
 from django.db import models
 from PIL import Image
+from django.contrib.auth.models import User
 
 
 def resize_image(image_path, max_size):
@@ -38,12 +39,11 @@ class Products(models.Model):
         if self.image:
             resize_image(self.image.path, (300, 300))
 
-
 class CartItem(models.Model):
-    product_name = models.CharField(max_length=255)
-    quantity = models.PositiveIntegerField(default=1)
-    price = models.DecimalField(max_digits=10, decimal_places=2)
-    total_price = models.DecimalField(max_digits=10, decimal_places=2)
+    product_name = models.CharField(max_length=255, null=True, blank=True)
+    quantity = models.PositiveIntegerField(default=1, null=True, blank=True)
+    price = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
+    total_price = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
     product = models.ForeignKey(Products, on_delete=models.CASCADE)
 
 
